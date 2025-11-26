@@ -105,6 +105,63 @@ String handleRootView() {
   return html;
 }
 
+String handleWorkServerView(String localIPToString, String currentToken) {
+    String html = "";
+    html += "<!DOCTYPE html>";
+    html += "<html lang='es'>";
+    html += "<head>";
+    html += "<meta charset='UTF-8'>";
+    html += "<meta name='viewport' content='width=device-width, initial-scale=1.0'>";
+    html += "<title>Estado del Servidor ESP8266</title>";
+
+    html += "<style>";
+    html += "/* Estilos CSS Neumórficos y Gradientes */";
+    html += "body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#d1e4ff 0%,#eef6fd 100%);display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0;padding:20px;color:#333;text-align:center;}";
+    html += ".card{background:#ffffffcc;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:20px;padding:0;width:100%;max-width:380px;box-shadow:12px 12px 25px rgba(0,0,0,0.08),-12px -12px 25px rgba(255,255,255,0.7);overflow:hidden;display:flex;flex-direction:column;}";
+    html += ".header{background:linear-gradient(135deg,#0066ff 0%,#00b4ff 100%);color:#fff;padding:18px 22px;font-size:1.15em;font-weight:600;display:flex;justify-content:space-between;align-items:center;text-shadow:0 1px 2px rgba(0,0,0,0.2);}";
+    html += ".form-content{padding:28px 32px 34px 32px;text-align:left;}";
+    html += ".status-info h1{font-size:1.5em;color:#0066ff;margin:0 0 10px 0;padding-top:5px;}";
+    html += ".status-info h2{font-size:1.2em;color:#444;margin:0 0 5px 0;font-weight:500;}";
+    html += ".status-info h3{font-size:0.9em;color:#666;margin-top:15px;margin-bottom:5px;font-weight:600;text-transform:uppercase;}";
+    html += ".token-display{background-color:#eef6fd;border-radius:8px;padding:10px 15px;margin-top:10px;font-size:1.4em;font-weight:700;color:#28a745;word-break:break-all;box-shadow:inset 2px 2px 5px rgba(0,0,0,0.05);}";
+    html += ".ip-display{font-size:1.1em;color:#007bff;font-weight:700;margin-bottom:20px;}";
+    html += ".note{font-size:0.8em;color:#888;margin-top:15px;border-top:1px solid #eee;padding-top:10px;}";
+    html += ".icon-server::before{content:'🌐';margin-right:5px;}";
+    html += ".icon-settings::before{content:'⚙️';}";
+    html += ".icon-key::before{content:'🔑';margin-right:5px;}";
+    html += "</style>";
+
+    html += "</head><body>";
+
+    html += "<div class='card'>";
+    html += "<div class='header'>";
+    html += "<div><span class='icon-server'></span>Estado del Servicio ESP8266</div>";
+    html += "<span class='icon-settings'></span>";
+    html += "</div>";
+
+    html += "<div class='form-content status-info'>";
+    html += "<h1>SERVICIO ACTIVO</h1>";
+
+    html += "<h2>IP de Trabajo:</h2>";
+    html += "<div class='ip-display'>";
+    html += localIPToString; // Inyección de variable 1
+    html += "</div>";
+
+    html += "<h3><span class='icon-key'></span>Token de Seguridad Actual:</h3>";
+    html += "<div class='token-display'>";
+    html += currentToken; // Inyección de variable 2
+    html += "</div>";
+
+    html += "<p class='note'>";
+    html += "El token de seguridad se actualiza periódicamente (ej. cada 5 minutos) para proteger el acceso.";
+    html += "</p>";
+    html += "</div>";
+    html += "</div>";
+
+    html += "</body></html>";
+    return html;
+}
+
 
 void handleRoot() {
   String html = handleRootView();
@@ -196,15 +253,8 @@ void handleWorkServer() {
   
   // 2. Respuesta HTTP (Modo STA - IP y Token visibles en el navegador)
   webServer.sendHeader("Connection", "close");
-  webServer.send(200, "text/html", 
-    "<html><body>"
-    "<h1>SERVICIO ACTIVO</h1>"
-    "<h2>IP de Trabajo: " + localIP.toString() + "</h2>"
-    "<p>El token se actualiza cada 5 minutos.</p>"
-    "<h3>Token de Seguridad Actual:</h3>"
-    "<h2>" + currentToken + "</h2>"
-    "</body></html>"
-  );
+  String html = handleWorkServerView(localIP.toString(), currentToken);
+  webServer.send(200, "text/html", html);
 }
 
 // ------------------------------------
