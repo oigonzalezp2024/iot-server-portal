@@ -162,6 +162,59 @@ String handleWorkServerView(String localIPToString, String currentToken) {
     return html;
 }
 
+String handleSaveView(String ssid_str) {
+    String html = "";
+    html += "<!DOCTYPE html>";
+    html += "<html lang='es'>";
+    html += "<head>";
+    html += "<meta charset='UTF-8'>";
+    html += "<meta name='viewport' content='width=device-width, initial-scale=1.0'>";
+    html += "<title>Configuración Guardada</title>";
+
+    html += "<style>";
+    html += "/* Estilos CSS Neumórficos y Gradientes */";
+    html += "body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#d1e4ff 0%,#eef6fd 100%);display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0;padding:20px;color:#333;text-align:center;}";
+    html += ".card{background:#ffffffcc;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:20px;padding:0;width:100%;max-width:380px;box-shadow:12px 12px 25px rgba(0,0,0,0.08),-12px -12px 25px rgba(255,255,255,0.7);overflow:hidden;display:flex;flex-direction:column;}";
+    html += ".header{background:linear-gradient(135deg,#0066ff 0%,#00b4ff 100%);color:#fff;padding:18px 22px;font-size:1.15em;font-weight:600;display:flex;justify-content:space-between;align-items:center;text-shadow:0 1px 2px rgba(0,0,0,0.2);}";
+    html += ".form-content{padding:28px 32px 34px 32px;text-align:center;}"; /* Centralizado para la notificación */
+    
+    /* Estilos específicos para la notificación de éxito */
+    html += ".success-icon{color:#28a745;font-size:3.5em;margin-bottom:15px;line-height:1;}"; /* Icono de check verde */
+    html += "h1{font-size:1.8em;color:#28a745;margin:0 0 10px 0;font-weight:700;}"; /* Título de éxito */
+    html += "p{font-size:1.0em;color:#666;margin:0 0 25px 0;}"; /* Mensaje de estado */
+    html += ".ssid-display{font-weight:700;color:#0066ff;}"; /* Resaltar el SSID */
+    html += ".reboot-note{font-size:0.9em;color:#007bff;margin-top:20px;padding-top:15px;border-top:1px solid #eee;}"; /* Nota de reinicio */
+    
+    html += ".icon-check::before{content:'✅';}";
+    html += ".icon-settings::before{content:'⚙️';}";
+    html += "</style>";
+
+    html += "</head><body>";
+
+    html += "<div class='card'>";
+    html += "<div class='header'>";
+    html += "<div>Configuración Guardada</div>";
+    html += "<span class='icon-settings'></span>";
+    html += "</div>";
+
+    html += "<div class='form-content'>";
+    html += "<div class='success-icon'>✅</div>";
+    html += "<h1>¡Credenciales Guardadas!</h1>";
+    
+    html += "<p>";
+    html += "Intentando conectar a <span class='ssid-display'>" + ssid_str + "</span>.";
+    html += "</p>";
+    
+    html += "<p class='reboot-note'>";
+    html += "El dispositivo se está reiniciando para aplicar los cambios. Por favor, espere un momento.";
+    html += "</p>";
+    
+    html += "</div>";
+    html += "</div>";
+
+    html += "</body></html>";
+    return html;
+}
 
 void handleRoot() {
   String html = handleRootView();
@@ -177,8 +230,7 @@ void handleSave() {
   
   saveCredentials();
 
-  String html = "<html><body><h1>Credenciales Guardadas!</h1>";
-  html += "<p>Intentando conectar a " + ssid_str + ". Reiniciando...</p>";
+  String html = handleSaveView(ssid_str) ;
   webServer.send(200, "text/html", html);
   
   delay(2000);
