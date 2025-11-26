@@ -6,6 +6,9 @@ Este proyecto implementa un Servidor IoT con Portal Cautivo y Token Temporal en 
 
 ### I. Hardware Básico y Configuración de DIP Switches
 
+
+![alt text](./images/board_config.png)
+
 El chip ESP8266 (el microcontrolador Wi-Fi) se comunica con el USB de la PC a través de un chip intermediario. La operación requiere manipular los **Interruptores DIP** para dirigir la señal serial (TX/RX) al chip correcto.
 
 | Modo de Operación | Propósito | Configuración de DIP Switches (1-7) |
@@ -21,6 +24,7 @@ El chip ESP8266 (el microcontrolador Wi-Fi) se comunica con el USB de la PC a tr
 
 > **Regla de Oro:** Siempre debes cambiar los DIP Switches al **Modo de Comunicación** (2) después de subir el código para que el programa se ejecute correctamente.
 
+![alt text](./images/serial_monitor.png)
 ---
 
 ### II. Flujo de Trabajo del Desarrollador (Debugging)
