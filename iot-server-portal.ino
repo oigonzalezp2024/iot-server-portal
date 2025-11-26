@@ -60,14 +60,54 @@ String generateToken() {
 
 // --- MANEJO DE LA WEB (FORMULARIO AP) ---
 
-void handleRoot() {
-  String html = "<html><body>";
-  html += "<h2>Configuración WiFi ESP8266</h2>";
+String handleRootView() {
+  String html = "";
+  html += "<!DOCTYPE html>";
+  html += "<html lang='es'>";
+  html += "<head>";
+  html += "<meta charset='UTF-8'>";
+  html += "<meta name='viewport' content='width=device-width, initial-scale=1.0'>";
+  html += "<title>Configuración WiFi ESP8266</title>";
+
+  html += "<style>";
+  html += "body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#d1e4ff 0%,#eef6fd 100%);display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0;padding:20px;}";
+  html += ".card{background:#ffffffcc;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:20px;padding:0;width:100%;max-width:380px;box-shadow:12px 12px 25px rgba(0,0,0,0.08),-12px -12px 25px rgba(255,255,255,0.7);overflow:hidden;}";
+  html += ".header{background:linear-gradient(135deg,#0066ff 0%,#00b4ff 100%);color:#fff;padding:18px 22px;font-size:1.15em;font-weight:600;display:flex;justify-content:space-between;align-items:center;}";
+  html += ".form-content{padding:28px 32px 34px 32px;}";
+  html += "label{display:block;margin-bottom:9px;font-weight:600;font-size:0.9em;color:#444;}";
+  html += ".form-group{margin-bottom:28px;}";
+  html += "input[type=text],input[type=password]{width:100%;padding:14px 12px;border-radius:10px;background:#f1f5fa;border:none;box-shadow:inset 4px 4px 8px rgba(0,0,0,0.08),inset -4px -4px 8px rgba(255,255,255,0.9);font-size:0.95em;transition:all .25s ease;}";
+  html += "input[type=text]:focus,input[type=password]:focus{background:#fff;box-shadow:0 0 0 3px rgba(0,132,255,0.35);outline:none;}";
+  html += "input[type=submit]{width:100%;padding:15px;border:none;border-radius:12px;cursor:pointer;font-size:1.05em;font-weight:700;color:#fff;background:linear-gradient(135deg,#28a745 0%,#20bf55 100%);transition:0.2s;box-shadow:6px 6px 14px rgba(0,0,0,0.15),-3px -3px 7px rgba(255,255,255,0.7);}";
+  html += "input[type=submit]:hover{filter:brightness(1.08);transform:translateY(-1px);}";
+  html += "input[type=submit]:active{transform:translateY(2px);box-shadow:inset 4px 4px 10px rgba(0,0,0,0.2);}";
+  html += "::placeholder{color:#9ca3b2;font-style:italic;}";
+  html += "</style>";
+
+  html += "</head><body>";
+
+  html += "<div class='card'>";
+  html += "<div class='header'><span>📶 Configuración WiFi ESP8266</span><span>⚙️</span></div>";
+  html += "<div class='form-content'>";
   html += "<form method='get' action='guardar'>";
-  html += "SSID de la red: <input name='ssid' length=32><br><br>";
-  html += "Contraseña: <input name='pass' type='password' length=64><br><br>";
+  html += "<div class='form-group'>";
+  html += "<label for='ssid'>SSID de la red:</label>";
+  html += "<input name='ssid' id='ssid' type='text' maxlength='32' placeholder='Ej: MiRed_Oficina'>";
+  html += "</div>";
+  html += "<div class='form-group'>";
+  html += "<label for='pass'>Contraseña:</label>";
+  html += "<input name='pass' id='pass' type='password' maxlength='64' placeholder='Ingresa la contraseña'>";
+  html += "</div>";
   html += "<input type='submit' value='Guardar y Conectar'>";
-  html += "</form></body></html>";
+  html += "</form></div></div>";
+
+  html += "</body></html>";
+  return html;
+}
+
+
+void handleRoot() {
+  String html = handleRootView();
   webServer.send(200, "text/html", html);
 }
 
