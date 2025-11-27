@@ -1,0 +1,61 @@
+# ----------------------------------------------------
+# 1. Dependencias y Herramientas de Construcción (PHP)
+# ----------------------------------------------------
+# Excluye el directorio de dependencias de Composer
+# (según el directorio 'vendor' en tu estructura)
+/vendor/
+
+# Archivo de autoloading y caché de Composer
+composer.phar
+.composer-cache
+/storage/cache/*
+
+# ----------------------------------------------------
+# 2. Logs, Archivos Temporales y Bases de Datos
+# ----------------------------------------------------
+# Logs de la aplicación (se corresponde con tu directorio 'logs')
+/logs/*.log
+/logs/*.txt
+/logs/*.tmp
+/logs/.gitkeep  # Opcional: si quieres conservar el directorio vacío en Git, quita esta línea.
+
+# Archivos de bases de datos de desarrollo
+# (Se corresponde con tu archivo 'esp_db.sql' en 'bbdd')
+/bbdd/*.sql
+/bbdd/*.sqlite
+
+# Archivos de sesión y temporales
+/tmp/
+*.bak
+*.swp
+*~
+
+# ----------------------------------------------------
+# 3. Archivos de Entorno y Configuración Local
+# ----------------------------------------------------
+# Archivos con variables de entorno (sensible)
+.env
+.env.local
+.env.testing
+
+# Archivos de configuración de IDEs (VS Code, JetBrains, etc.)
+.vscode/
+.idea/
+*.iml
+.DS_Store
+
+# ----------------------------------------------------
+# 4. Archivos de Test y Cobertura
+# ----------------------------------------------------
+# Archivos generados por herramientas de prueba
+/coverage/
+.phpunit.result.cache
+
+# ----------------------------------------------------
+# 5. Archivos Generados por el S.O.
+# ----------------------------------------------------
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db

@@ -1,0 +1,105 @@
+openapi: 3.0.0
+info:
+  title: API de Registro de Dispositivos IOT
+  version: 1.0.0
+  description: API REST para que los dispositivos ESP8266 registren o actualicen su dirección IP (función UPSERT).
+servers:
+  - url: http://localhost/api/
+    description: Servidor de Desarrollo/Local (Cambiar por URL de Producción)
+tags:
+  - name: Dispositivos
+    description: Operaciones de registro y actualización de dispositivos.
+paths:
+  /dispositivo_nuevo/:
+    post:
+      summary: Registra o actualiza la dirección IP de un dispositivo (UPSERT).
+      operationId: updateIpAddress
+      tags:
+        - Dispositivos
+      parameters:
+        - name: X-Device-Auth
+          in: header
+          required: true
+          description: Clave de autenticación API Key. Usar la clave configurada en el servidor.
+          schema:
+            type: string
+            example: tu_clave_secreta_api_aqui
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceData'
+      responses:
+        '200':
+          description: Operación exitosa. La acción indica si fue INSERTADO o ACTUALIZADO.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '401':
+          description: Fallo de Autenticación (Clave inválida).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '400':
+          description: Fallo de Validación (Faltan campos, ej. ip_address o device_id).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '405':
+          description: Método no permitido (Solo se acepta POST).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Error interno del servidor (ej. Error de conexión a la base de datos).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    DeviceData:
+      type: object
+      required:
+        - device_id
+        - ip_address
+      properties:
+        device_id:
+          type: string
+          example: ESP_TEST_012
+          description: Identificador único del dispositivo.
+        ip_address:
+          type: string
+          example: 10.0.0.116
+          description: Dirección IP actual del dispositivo.
+    SuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: IP Actualizado exitosamente en la base de datos.
+        action:
+          type: string
+          example: Actualizado
+          description: Indica si el dispositivo fue 'Insertado' o 'Actualizado'.
+        device_id:
+          type: string
+          example: ESP_TEST_012
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: Acceso denegado. Clave de autenticación inválida.
