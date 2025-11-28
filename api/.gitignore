@@ -19,11 +19,6 @@ composer.phar
 /logs/*.tmp
 /logs/.gitkeep  # Opcional: si quieres conservar el directorio vacío en Git, quita esta línea.
 
-# Archivos de bases de datos de desarrollo
-# (Se corresponde con tu archivo 'esp_db.sql' en 'bbdd')
-/bbdd/*.sql
-/bbdd/*.sqlite
-
 # Archivos de sesión y temporales
 /tmp/
 *.bak
