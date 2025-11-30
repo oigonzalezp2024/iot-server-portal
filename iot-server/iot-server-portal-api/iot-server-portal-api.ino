@@ -6,7 +6,7 @@
 #include <WiFiClient.h>
 
 // --- CONSTANTES DE LA API ---
-const char* API_URL = "http://192.168.101.22/api/dispositivo_nuevo/"; // Remplazar __SERVER__ por la IP o URL de API
+const char* API_URL = "https://__SERVER__/api/dispositivo_nuevo/"; // Remplazar __SERVER__ por la IP o URL de API
 const char* API_AUTH_KEY = "tu_clave_secreta_api_aqui"; 
 const char* DEVICE_ID = "ESP_MI_DISPOSITIVO";
 
@@ -38,12 +38,13 @@ void registerIpInApi() {
   // 1. Preparar la conexión HTTP
   HTTPClient http;
   
-  WiFiClient client; 
+  WiFiClientSecure client; 
 
   Serial.print("🌐 Enviando IP a la API: ");
   Serial.println(API_URL);
   
   // Usar la sobrecarga begin(WiFiClient&, url)
+  client.setInsecure(); // Desactiva temporalmente la verificación (solo para pruebas)
   http.begin(client, API_URL); 
   
   // 2. Establecer Headers de autenticación y contenido
@@ -74,6 +75,36 @@ void registerIpInApi() {
   
   // 6. Cerrar la conexión
   http.end();
+}
+
+// --- NUEVO HANDLER PARA LA RUTA INTERNA /registerIpInApi/ ---
+
+void handleRegisterApiEndpoint() {
+    Serial.println("\n*** Recibida solicitud para forzar el registro en la API ***");
+    
+    // 1. Ejecutar la función principal de registro en la API externa
+    registerIpInApi(); 
+    
+    // 2. Preparar la respuesta para el cliente web (navegador)
+    String htmlResponse = "";
+    htmlResponse += "<!DOCTYPE html><html><head><title>Registro Forzado</title>";
+    htmlResponse += "<meta name='viewport' content='width=device-width, initial-scale=1.0'>";
+    htmlResponse += "<style>body{font-family:sans-serif;background-color:#f8f9fa;color:#333;padding:20px;}";
+    htmlResponse += ".card{background:#fff;border-radius:10px;padding:20px;box-shadow:0 4px 8px rgba(0,0,0,0.1);}";
+    htmlResponse += "h1{color:#007bff;} h2{color:#28a745;}</style>";
+    htmlResponse += "</head><body>";
+    htmlResponse += "<div class='card'>";
+    htmlResponse += "<h1>⚙️ Petición de Registro Forzada</h1>";
+    htmlResponse += "<h2>✅ Proceso de API Ejecutado</h2>";
+    htmlResponse += "<p>El ESP8266 ha intentado registrar su IP en la API externa (babull.com.co).</p>";
+    htmlResponse += "<p><strong>Verifique el Monitor Serial</strong> para confirmar el código de respuesta (debe ser 200).</p>";
+    htmlResponse += "<p><a href='/'>Volver a la IP de trabajo</a></p>";
+    htmlResponse += "</div></body></html>";
+
+    // 3. Enviar la respuesta HTTP 200 OK al cliente web
+    webServer.send(200, "text/html", htmlResponse); 
+
+    Serial.println("*** Respuesta enviada al cliente. ***\n");
 }
 
 // --- FUNCIONES DE ALMACENAMIENTO EEPROM ---
@@ -414,6 +445,7 @@ void setup() {
     registerIpInApi(); 
     
     webServer.on("/", handleWorkServer);
+    webServer.on("/registerIpInApi/", handleRegisterApiEndpoint);
     webServer.begin();
     Serial.println("Servidor web de trabajo iniciado.");
   }
